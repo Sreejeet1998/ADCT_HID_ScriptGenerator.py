@@ -1,62 +1,46 @@
-import re
 import pandas as pd
-import traceback
-import time
+from io import StringIO
 
 dfk = pd.read_excel(r"C:\Users\patra\OneDrive\Desktop\Arunavo B\HID_Add_Upgrade_Sample.xlsx")
 
-dfk['mul _sep'] = dfk['mul _sep'].fillna('')
-
-df = dfk.groupby(['Handle_ID', 'targetField']).agg({
-    'mul _sep': 'first',
-    'targetValue': lambda x: ','.join(x),
+dfk['mul_sep'] = dfk['mul_sep'].fillna('')
+df = dfk.groupby(['Handle_ID', 'targetField', 'mul_sep']).agg({
+    #'mul_sep': 'first',
+    'targetValue': lambda x: x.tolist(),
     'mode': 'first'
 }).reset_index()
-
-
 print(df)
-# df = pd.read_excel(template, dtype='object')
-# df.fillna('', inplace=True)
-# cols = len(df.columns)
-
+transformed_data = []
 for index, row in df.iterrows():
-    #try:
-        # print(row[0],row[1],row[2],row[3],row[4])
-        outstr = '"' + str(row[0]).strip() + '","{'
-        field = str(row[1]).strip()
-        mul_sep = str(row[2]).strip()
+    hi = str(row[0]).strip()
+    tf = str(row[1]).strip()
+    mul_sep = str(row[2]).strip()
+    tvl = row[3]
+    tvl1 = []
+    if not mul_sep or len(mul_sep) == 0:
+        tvl1 = tvl
+        #print(tvl)
+    else:
+        for eachvalue in tvl:
+            #print(tvl)
+            new_data = str(eachvalue).split(mul_sep)
+            #print('###',new_data)
+            for eachvalue in new_data:
+                if eachvalue not in tvl1:
+                    tvl1.append(eachvalue)
+                    #print("tvl=",tvl1)
 
+    transformed_data.append({
+        'Handle_ID': hi,
+        'targetField': tf,
+        'targetValue': tvl1,
+        'mode': row['mode']
+    })
 
-        if not mul_sep or len(mul_sep) == 0:
-            data = str(row[3]).strip()
-            data = data.strip().replace('\\', '\\\\\\\\').replace('"', '\\\\\\"')
-            print(data)
-            data = '""' + data + '""'
+    transformed_df = pd.DataFrame(transformed_data)
 
-        else:
-            data = str(row[3]).split(mul_sep)
-            # print(data)
-            setvalue = ""
-            for eachval in data:
-                eachval = eachval.strip().replace('\\', '\\\\\\\\').replace('"', '\\\\\\"')
-                setvalue = setvalue + '""' + eachval + '"",'
-            data = re.sub(r',$', "", string=setvalue)
-        mode = str(row[4]).strip()
-        mode = str(row[4])
-        if mode.casefold() == "onBlank".casefold():
-            mode = "onBlank"
-        elif mode.casefold() == "coalesce".casefold():
-            mode = "coalesce"
-        else:
-            mode = "add"
+    # df1[''] = df1.'targetValue'.unique()
+    df1 = transformed_df.groupby(['Handle_ID', 'targetField'])['targetValue'].apply(
+        lambda x: list(set(y for sublist in x for y in sublist))).reset_index()
 
-        outstr += '""' + field + '"":{""action"":[""add""], ""add"":{""targetValue"":[' + data + '], ""mode"":""' + mode + '""}}}"'
-        # outfile.write(outstr)
-        # outstrip.write('\n')
-        print(outstr)
-
-    # except Exception as err:
-    #     print(outstr)
-    #     print(err)
-    #     print(traceback.extract_tb(err.__traceback__))
-    #     continue
+print(df1)
