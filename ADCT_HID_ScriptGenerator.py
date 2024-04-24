@@ -13,7 +13,6 @@ root.title("HID Script Generator...")
 class templateFile():
     filename = ""
 
-
 def browseFiles(titletext, myLabel, template):
     template.filename = filedialog.askopenfilename(title=titletext,
                                                    filetypes=(("HID Template files",
@@ -22,8 +21,6 @@ def browseFiles(titletext, myLabel, template):
                                                                "*.*")))
     myLabel.configure(text=template.filename)
     var.set(1)
-    # print("local:" + template.filename)
-
 
 def saveFile(myLabel):
     myLabel.configure(text="")
@@ -33,28 +30,25 @@ def saveFile(myLabel):
                                                               ("all files",
                                                                "*.*")))
     myLabel.configure(text=filename)
-    # var.set(1)
-    # print("local:" + filename)
     myClick(filename)
 
 
 def myClick(outfilePath):
     outfile = open(outfilePath, 'w', encoding='utf-8')
-    # print("global:" + copyData.filename)
+
     if copyData.filename:
         generateConfig_copyData.generate_script(copyData.filename, outfile)
-    # print("global:" + useMap.filename)
+
     if useMap.filename:
         generateConfig_useMap.generate_script(useMap.filename, outfile)
-    # print("global:" + add.filename)
+
     if add.filename:
         generateConfig_add.generate_script(add.filename, outfile)
-    # print("global:" + deleteField.filename)
+
     if deleteField.filename:
         generateConfig_fieldremove.generate_script(deleteField.filename, outfile)
     outfile.close()
     print("Done...")
-
 
 root.tkraise()
 # Layout for HID copyData template
@@ -94,9 +88,5 @@ myLabel5 = Label(root, padx=50)
 myLabel5.grid(row=4, column=0)
 myButton5 = Button(root, text="Generate Script...", command=lambda : saveFile(myLabel5))
 myButton5.grid(row=4, column=1)
-
-# root.wait_variable(var)
-
-
 
 root.mainloop()
