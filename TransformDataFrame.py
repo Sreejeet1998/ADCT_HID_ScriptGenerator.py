@@ -36,7 +36,7 @@ def transformedDataframe(template, outfile):
         })
 
     transformed_df = pd.DataFrame(transformed_data)
-    transformed_df["mode"].fillna("add", inplace=True)
+    transformed_df.fillna({"mode":"add"}, inplace=True)
 
     transformed_df = transformed_df.groupby(['Handle_ID', 'targetField'],sort=False).agg({
         'targetValue': lambda x: list(set(y for sublist in x for y in sublist)),
