@@ -4,10 +4,13 @@ import generateConfig_copyData
 import generateConfig_useMap
 import generateConfig_add
 import generateConfig_fieldremove
+import warnings
+
+warnings.filterwarnings('ignore')
 
 root = Tk()
 var = IntVar()
-root.title("HID Script Generator...")
+root.title("HID Script Generator V-2.0")
 
 
 class templateFile():
