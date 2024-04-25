@@ -3,14 +3,14 @@ from tkinter import filedialog
 import generateConfig_copyData
 import generateConfig_useMap
 import generateConfig_add
-import generateConfig_fieldremove
+import generateConfig_deleteField
 import warnings
 
 warnings.filterwarnings('ignore')
 
 root = Tk()
 var = IntVar()
-root.title("HID Script Generator V-2.0")
+root.title("HID Script Generator_V2.0")
 
 
 class templateFile():
@@ -51,7 +51,6 @@ def myClick(outfilePath):
     if deleteField.filename:
         generateConfig_fieldremove.generate_script(deleteField.filename, outfile)
     outfile.close()
-    print("Done...")
 
 root.tkraise()
 # Layout for HID copyData template
