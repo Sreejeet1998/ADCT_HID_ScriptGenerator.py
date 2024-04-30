@@ -37,4 +37,4 @@ def generate_script(template, outfile):
 
         print("Done...")
     else:
-        print("Wrong Naming Convention")
+        print(template,"- Column not in right name.")

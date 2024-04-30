@@ -23,7 +23,6 @@ def browseFiles(titletext, myLabel, template):
                                                               ("all files",
                                                                "*.*")))
     myLabel.configure(text=template.filename)
-    var.set(1)
 
 def saveFile(myLabel):
     myLabel.configure(text="")
@@ -49,7 +48,7 @@ def myClick(outfilePath):
         generateConfig_add.generate_script(add.filename, outfile)
 
     if deleteField.filename:
-        generateConfig_fieldremove.generate_script(deleteField.filename, outfile)
+        generateConfig_deleteField.generate_script(deleteField.filename, outfile)
     outfile.close()
 
 root.tkraise()

@@ -26,4 +26,4 @@ def generate_script(template, outfile):
             outfile.write('\n')
         print("Done...")
     else:
-        print("Wrong Naming Convention")
+        print(template,"- Column not in right name.")
