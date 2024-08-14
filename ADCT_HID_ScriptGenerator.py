@@ -1,3 +1,4 @@
+import json
 from tkinter import *
 from tkinter import filedialog
 import generateConfig_copyData
@@ -5,7 +6,7 @@ import generateConfig_useMap
 import generateConfig_add
 import generateConfig_deleteField
 import warnings
-
+import os
 warnings.filterwarnings('ignore')
 
 root = Tk()
@@ -16,23 +17,82 @@ root.title("HID Script Generator_V2.0")
 class templateFile():
     filename = ""
 
+CONFIG_FILE_1 = 'config.json'
+CONFIG_FILE_2 = 'config.json'
+
+
+def load_last_dir():
+    """Load the last directory from the config file."""
+    if os.path.exists(CONFIG_FILE_1):
+        with open(CONFIG_FILE_1, 'r') as f:
+            data = json.load(f)
+            return data.get('last_dir', os.getcwd())
+    return os.getcwd()
+
+
+def save_last_dir(directory):
+    """Save the last directory to the config file."""
+    with open(CONFIG_FILE_1, 'w') as f:
+        json.dump({'last_dir': directory}, f)
+
+
 def browseFiles(titletext, myLabel, template):
-    template.filename = filedialog.askopenfilename(title=titletext,
-                                                   filetypes=(("HID Template files",
-                                                               "*.xlsx"),
-                                                              ("all files",
-                                                               "*.*")))
-    myLabel.configure(text=template.filename)
+    # Load the last directory from the config file
+    initial_dir = load_last_dir()
+
+    # Open the file dialog with the initial directory set
+    template.filename = filedialog.askopenfilename(
+        title=titletext,
+        initialdir=initial_dir,
+        filetypes=(
+            ("HID Template files", "*.xlsx"),
+            ("all files", "*.*")
+        )
+    )
+
+    if template.filename:  # If a file was selected
+        # Update the last_dir in the config file
+        save_last_dir(os.path.dirname(template.filename))
+        # Update the label with the selected file's path
+        myLabel.configure(text=template.filename)
+
+
+def load_last_dir():
+    """Load the last directory from the config file."""
+    if os.path.exists(CONFIG_FILE_2):
+        with open(CONFIG_FILE_2, 'r') as f:
+            data = json.load(f)
+            return data.get('last_dir', os.getcwd())
+    return os.getcwd()
+
+
+def save_last_dir(directory):
+    """Save the last directory to the config file."""
+    with open(CONFIG_FILE_2, 'w') as f:
+        json.dump({'last_dir': directory}, f)
+
 
 def saveFile(myLabel):
-    myLabel.configure(text="")
-    filename = filedialog.asksaveasfilename(defaultextension=".csv",
-                                                     filetypes=(("HID Script file",
-                                                               "*.csv"),
-                                                              ("all files",
-                                                               "*.*")))
-    myLabel.configure(text=filename)
-    myClick(filename)
+    # Load the last directory from the config file
+    initial_dir = load_last_dir()
+
+    # Open the save file dialog with the initial directory set
+    filename = filedialog.asksaveasfilename(
+        defaultextension=".csv",
+        initialdir=initial_dir,
+        filetypes=(
+            ("HID Script file", "*.csv"),
+            ("all files", "*.*")
+        )
+    )
+
+    if filename:  # If a file was selected
+        # Update the last_dir in the config file
+        save_last_dir(os.path.dirname(filename))
+        # Update the label with the selected file's path
+        myLabel.configure(text=filename)
+        # Call the custom function with the selected filename
+        myClick(filename)
 
 
 def myClick(outfilePath):

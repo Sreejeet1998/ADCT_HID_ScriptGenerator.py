@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+pd.set_option('display.width', 400)
 import traceback
 from TransformDataFrame import transformedDataframe
 
@@ -20,14 +21,15 @@ def generate_script(template, outfile):
 
     if flag == 0:
         dataFile = transformedDataframe(template,outfile)
-
+        # print(dataFile[dataFile['Handle_ID'] == "oklahoma_history/S_G_S_P_C_O_1895_1959_75457787"]["targetValue"].iloc[0])
         for index, row in dataFile.iterrows():
             try:
                 outstr = '"' + str(row[0]).strip() + '","{'
                 field = str(row[1]).strip()
                 setvalue = ""
                 for eachval in row[2]:
-                        eachval = eachval.strip().replace('\\', '\\\\\\\\').replace('"', '\\\\\\"')
+
+                        eachval = eachval.strip().replace('\\', '\\\\\\\\').replace('"', '\\"')
                         setvalue = setvalue + '""' + eachval + '"",'
                 data = re.sub(r',$', "", string=setvalue)
 
