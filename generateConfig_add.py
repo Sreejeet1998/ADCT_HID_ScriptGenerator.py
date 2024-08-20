@@ -1,4 +1,6 @@
 import re
+from tkinter import messagebox
+
 import pandas as pd
 pd.set_option('display.width', 400)
 import traceback
@@ -6,8 +8,8 @@ from TransformDataFrame import transformedDataframe
 
 def generate_script(template, outfile):
     dataframe = pd.read_excel(template, dtype='object')
-    flag = 0
     dataframe_header = []
+    flag = 0
     for col in dataframe.columns:
         dataframe_header.append(col)
 
@@ -52,4 +54,6 @@ def generate_script(template, outfile):
         print("Done...")
 
     else:
+
+        messagebox.showerror('Python Error', 'Error: Naming Convention did not match!')
         print(template,"- Column not in right name.")
