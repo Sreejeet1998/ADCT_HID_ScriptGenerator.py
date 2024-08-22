@@ -18,13 +18,10 @@ import requests
 vrs = 2.1
 
 def checkversionnumber():
-    # Correct raw URL to access the file content directly
     url = "https://raw.githubusercontent.com/Sreejeet1998/ADCT_HID_ScriptGenerator.py/master/version"
 
-    # Send a GET request to fetch the file content
     response = requests.get(url)
 
-    # Check if the request was successful
     if response.status_code == 200:
         file_content = response.text
         if float(file_content)>float(vrs):
@@ -33,7 +30,6 @@ def checkversionnumber():
     else:
         print(f"Failed to retrieve file: {response.status_code}")
 
-# Call the function to check the version number
 checkversionnumber()
 
 
@@ -63,10 +59,8 @@ def save_last_dir(directory):
 
 
 def browseFiles(titletext, myLabel, template):
-    # Load the last directory from the config file
     initial_dir = load_last_dir()
 
-    # Open the file dialog with the initial directory set
     template.filename = filedialog.askopenfilename(
         title=titletext,
         initialdir=initial_dir,
@@ -76,10 +70,8 @@ def browseFiles(titletext, myLabel, template):
         )
     )
 
-    if template.filename:  # If a file was selected
-        # Update the last_dir in the config file
+    if template.filename:
         save_last_dir(os.path.dirname(template.filename))
-        # Update the label with the selected file's path
         myLabel.configure(text=template.filename)
 
 
@@ -112,12 +104,9 @@ def saveFile(myLabel):
         )
     )
 
-    if filename:  # If a file was selected
-        # Update the last_dir in the config file
+    if filename:
         save_last_dir(os.path.dirname(filename))
-        # Update the label with the selected file's path
         myLabel.configure(text=filename)
-        # Call the custom function with the selected filename
         myClick(filename)
 
 
