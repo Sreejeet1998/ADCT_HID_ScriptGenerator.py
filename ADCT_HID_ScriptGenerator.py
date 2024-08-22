@@ -1,16 +1,42 @@
 import json
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import generateConfig_copyData
 import generateConfig_useMap
 import generateConfig_add
 import generateConfig_deleteField
 import warnings
 import os
+import requests
 warnings.filterwarnings('ignore')
 
 root = Tk()
 var = IntVar()
+
+import requests
+
+vrs = 2.1
+
+def checkversionnumber():
+    # Correct raw URL to access the file content directly
+    url = "https://raw.githubusercontent.com/Sreejeet1998/ADCT_HID_ScriptGenerator.py/master/version"
+
+    # Send a GET request to fetch the file content
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        file_content = response.text
+        if float(file_content)>float(vrs):
+            messagebox.showinfo('App Info', 'Info: Update to newer version!')
+        else:pass
+    else:
+        print(f"Failed to retrieve file: {response.status_code}")
+
+# Call the function to check the version number
+checkversionnumber()
+
+
 root.title("HID Script Generator_V2.0")
 
 
