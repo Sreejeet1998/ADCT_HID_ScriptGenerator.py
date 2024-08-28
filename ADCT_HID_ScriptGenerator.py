@@ -20,15 +20,17 @@ vrs = 2.1
 def checkversionnumber():
     url = "https://raw.githubusercontent.com/Sreejeet1998/ADCT_HID_ScriptGenerator.py/master/version"
 
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an HTTPError if the response was unsuccessful
+        remote_version = response.text.strip()  # Get the version from the file
 
-    if response.status_code == 200:
-        file_content = response.text
-        if float(file_content)>float(vrs):
-            messagebox.showinfo('App Info', 'Info: Update to newer version!')
-        else:pass
-    else:
-        print(f"Failed to retrieve file: {response.status_code}")
+        if float(remote_version) > float(vrs):
+            messagebox.showinfo('App Info', f'Info: Update to latest version - {remote_version}')
+        else:
+            pass  # No update needed
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to retrieve file: {e}")
 
 checkversionnumber()
 
