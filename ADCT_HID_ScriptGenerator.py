@@ -1,6 +1,14 @@
 import json
+import struct
+from _ctypes import sizeof
+from ftplib import FTP
 from tkinter import *
 from tkinter import filedialog, messagebox
+
+import paramiko
+from paramiko.sftp_client import SFTP
+from paramiko.sftp_server import SFTPServer
+
 import generateConfig_copyData
 import generateConfig_useMap
 import generateConfig_add
@@ -15,25 +23,47 @@ var = IntVar()
 
 import requests
 
-vrs = 2.0
+vrs = 3.0
 
 def checkversionnumber():
-    url = "https://raw.githubusercontent.com/Sreejeet1998/ADCT_HID_ScriptGenerator.py/master/version"
+    # FTP server details
+    sftp_server = "10.72.22.220"  # Replace with your SFTP server's IP address
+    username = "sftpuser"  # Replace with your SFTP username
+    password = "Ndi@2023"  # Replace with your SFTP password
+
+    # Path to the version file on the SFTP server
+    remote_path = "/data/ndl/upload/sftpuser/SreejeetShome/ADCT/HID_S_Generator/version_file.txt"  # Replace with the correct path and file name
 
     try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an HTTPError if the response was unsuccessful
-        remote_version = response.text.strip()  # Get the version from the file
+        # Create an SSH client
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+        # Connect to the SFTP server
+        ssh.connect(hostname=sftp_server, username=username, password=password)
+
+        # Open SFTP session
+        sftp = ssh.open_sftp()
+
+        # Retrieve the version file content
+        with sftp.open(remote_path, 'r') as file:
+            remote_version = file.read().strip()
+            remote_version = remote_version.decode()
+
+        # Compare the remote version with the local version
         if float(remote_version) > float(vrs):
             messagebox.showinfo('App Info', f'Info: Update to latest version - {remote_version}')
         else:
             pass  # No update needed
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to retrieve file: {e}")
+
+        # Close the SFTP and SSH connections
+        sftp.close()
+        ssh.close()
+
+    except Exception as e:
+        print(f"Failed to retrieve file from SFTP: {e}")
 
 checkversionnumber()
-
 
 root.title("HID Script Generator_V2.0")
 
