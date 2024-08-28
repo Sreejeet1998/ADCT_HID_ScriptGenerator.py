@@ -15,7 +15,7 @@ var = IntVar()
 
 import requests
 
-vrs = 2.1
+vrs = 2.0
 
 def checkversionnumber():
     url = "https://raw.githubusercontent.com/Sreejeet1998/ADCT_HID_ScriptGenerator.py/master/version"
