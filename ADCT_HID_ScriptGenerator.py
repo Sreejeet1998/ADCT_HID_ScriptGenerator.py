@@ -26,37 +26,30 @@ import requests
 vrs = 3.0
 
 def checkversionnumber():
-    # FTP server details
-    sftp_server = "10.72.22.220"  # Replace with your SFTP server's IP address
-    username = "sftpuser"  # Replace with your SFTP username
-    password = "Ndi@2023"  # Replace with your SFTP password
+    sftp_server = "10.72.22.220"
+    username = "sftpuser"
+    password = "Ndi@2023"
 
-    # Path to the version file on the SFTP server
+
     remote_path = "/data/ndl/upload/sftpuser/SreejeetShome/ADCT/HID_S_Generator/version_file.txt"  # Replace with the correct path and file name
 
     try:
-        # Create an SSH client
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-        # Connect to the SFTP server
         ssh.connect(hostname=sftp_server, username=username, password=password)
 
-        # Open SFTP session
         sftp = ssh.open_sftp()
 
-        # Retrieve the version file content
         with sftp.open(remote_path, 'r') as file:
             remote_version = file.read().strip()
             remote_version = remote_version.decode()
 
-        # Compare the remote version with the local version
         if float(remote_version) > float(vrs):
             messagebox.showinfo('App Info', f'Info: Update to latest version - {remote_version}')
         else:
-            pass  # No update needed
+            pass
 
-        # Close the SFTP and SSH connections
         sftp.close()
         ssh.close()
 
